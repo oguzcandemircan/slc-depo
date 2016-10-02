@@ -1,10 +1,10 @@
 <?php 
 
 /**
- * undocumented function
+ * SLC WEB 	MÜHENDİSLİĞİ SİTE ANALİZ BOTU
  *
- * @return void
- * @author 
+ * 
+ * @author Oguzcan Demircan
  **/
 
 /*** Fonksiyonlar ***/
@@ -70,14 +70,6 @@ function donustur($bytes)
         return $bytes;
 }
 
-/*
-function donustur ($sayi)
-{
-	$sayi=$sayi/1024;
-	$sayi=substr(1, start)
-}
-*/
-
 function ara($bas, $son, $icerik)
 {
     @preg_match_all('/' . preg_quote($bas, '/') .
@@ -109,18 +101,15 @@ curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 $cıktı = curl_exec ($ch);
 curl_close($ch);
 
-//print_r($cıktı);
-
 
 $sonuc = ara('<div style="clear:both">','</div>', $cıktı);
-//print_r($sonuc);
+
 
 $deneme=(explode('<a href="/url?q=',$sonuc[0]));
 
 $d2=explode('/', $deneme[1]);
 $site=$d2[2];
 
-//$str_sonuc=strip_tags($sonuc[2]);
 
 $bulunan_site=file_get_contents("http://".$site);
 
@@ -154,24 +143,9 @@ for ($i=0; $i <count($resim); $i++)
 }//for
 
 //*************************************************************/
-
-
-	
-  	
+ 	
 
 //***** Yayınlama *******//
-/*
-	
-	echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';  
-	echo "<div class='h3-site'>".$site;
-	echo "</br> Toplam Resim Sayısı : ".count($resim);
-	echo "</br> Toplam Link Sayısı 	: ".count($link);
-	echo "</br> Toplam Resim Boyutu : ".donustur($toplam)." MB";
-	echo "</br>".$toplam;
-	echo "</div></div>";
-	
-*/
-
 
 
 	echo '<div class="panel panel-primary slc-sonuc">';

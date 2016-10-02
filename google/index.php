@@ -1,15 +1,90 @@
-<meta charset="UTF-8"/>
-
-<div class="form">
-	
-<form>
-<h4>ARA</h4>
-	<input type="text" name="ara" />
-	<input type="submit" name="gonder" value="gonder" />
-</form>
-
-</div>
 <?php 
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author 
+ **/
+
+/*** Fonksiyonlar ***/
+
+
+function img_boyut($file)
+{
+$ch = curl_init($file);
+   curl_setopt($ch, CURLOPT_NOBODY, true);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+   curl_setopt($ch, CURLOPT_HEADER, true);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+   $data = curl_exec($ch);
+   curl_close($ch);
+
+   $toplam_boyut=0;
+   
+   if (preg_match('/Content-Length: (\d+)/', $data, $matches))
+   {
+       $toplam_boyut = (int)$matches[1];
+       /*
+  		 function format_size($size)
+		{
+     			 $sizes = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
+      			if ($size == 0) { return('n/a'); } else {
+      			return (round($size/pow(1024, ($i = floor(log($size, 1024)))), 2)); }
+		}
+		$contentLength=format_size($contentLength);
+		*/
+   }
+   return $toplam_boyut;
+
+}
+
+
+function donustur($bytes)
+    {
+        if ($bytes >= 1073741824)
+        {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        }
+        elseif ($bytes >= 1048576)
+        {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        }
+        elseif ($bytes >= 1024)
+        {
+            $bytes = number_format($bytes / 1024, 2) . ' kB';
+        }
+        elseif ($bytes > 1)
+        {
+            $bytes = $bytes . ' bytes';
+        }
+        elseif ($bytes == 1)
+        {
+            $bytes = $bytes . ' byte';
+        }
+        else
+        {
+            $bytes = '0 bytes';
+        }
+
+        return $bytes;
+}
+
+/*
+function donustur ($sayi)
+{
+	$sayi=$sayi/1024;
+	$sayi=substr(1, start)
+}
+*/
+
+function ara($bas, $son, $icerik)
+{
+    @preg_match_all('/' . preg_quote($bas, '/') .
+    '(.*?)'. preg_quote($son, '/').'/i', $icerik, $m);
+    return @$m[1];
+}
+
 
 header("Content-Type: text/html; charset=utf-8");
 
@@ -22,6 +97,7 @@ if ($_GET)
 	else
 	{
 
+/****** Google Curl Arama ******/
 $kelime=str_replace(" ","+",$_GET['ara']);
 
 $useragent = "Opera/9.80 (J2ME/MIDP; Opera Mini/4.2.14912/870; U; id) Presto/2.4.15";
@@ -35,12 +111,6 @@ curl_close($ch);
 
 //print_r($cıktı);
 
-function ara($bas, $son, $icerik)
-{
-    @preg_match_all('/' . preg_quote($bas, '/') .
-    '(.*?)'. preg_quote($son, '/').'/i', $icerik, $m);
-    return @$m[1];
-}
 
 $sonuc = ara('<div style="clear:both">','</div>', $cıktı);
 //print_r($sonuc);
@@ -56,169 +126,145 @@ $bulunan_site=file_get_contents("http://".$site);
 
 ////////////////////////////////////////////////////////////
 
-$link = explode('<a href="',$bulunan_site);
+$link = ara('<a href="','"',$bulunan_site);
 //print_r(count($link));
 
 $resim=ara('<img src="','"',$bulunan_site);
 
 //print_r($resim);
-/*
-for ($x=3; $x <count($resim); $x++)
-{ 	
-	
-
-	echo "</br>";
-
-	  $https=str_replace('https://',' ',$resim[$x]);
-	 //echo "</br>";echo "</br>";echo "</br>";
-	   $http=str_replace('http://',' ',$https); 
-	
-	
-	if ($http[0]=="/" && $http[1]!=="/") {
-		$http="http://".$site.$http;
-		
-		
-		
-	}
-
-	echo curl_img_size($http);
-
-}//for*/
-
-//echo "</br></br>";
-//echo curl_img_size($resim[$i]);
 
 //*************************************************************/
 
+$toplam=0;
+
 for ($i=0; $i <count($resim); $i++)
-{ 	$aa=$resim[$i];
-	if ($aa[0]=="/" && $aa[1]!=="/") {
+{ 	
+	$aa=$resim[$i];
+	if ($aa[0]=="/" && $aa[1]!=="/") 
+	{
+		
 		$aaa=$site.$aa;
 		//echo $aaa."</br>";
 		$resim[$i]=$aaa;
-
-
 	}
-	$dizi=array(
-	"img-s2.onedio.com/id-57ee42eef36d9e090cca4ca7/rev-0/w-190/h-110/f-jpg/s-f6c4e2d6709c26b09dce74f8e793328a331bbc4d.jpg",
-	"img-s2.onedio.com/id-57ee42eef36d9e090cca4ca7/rev-0/w-190/h-110/f-jpg/s-f6c4e2d6709c26b09dce74f8e793328a331bbc4d.jpg",
-	"/images/logo/onedio-new2x.png" 
-	);
-	$dizi[]=$aa;
 	
-
-for ($i=0; $i <count($dizi) ; $i++) { 
-	echo "</br>";
-echo curl_img_size($dizi[$i]);
-}
+	
+	$toplam=(int)img_boyut($resim[$i])+$toplam;
 
 }//for
-
 
 //*************************************************************/
 
 
+	
+  	
 
-//Yayınlama
-
-echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';  
-echo "<h3 class='h3-site'>".$site;
-echo "</br> Toplam Resim Sayısı : ".count($resim);
-echo "</br> Toplam Link Sayısı : ".count($link);
-echo "</h3>";
-echo "<div class='site'>";
-
-$temiz=$bulunan_site; 
-//print_r($temiz);
-echo "</div>";
-
-
+//***** Yayınlama *******//
+/*
+	
+	echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';  
+	echo "<div class='h3-site'>".$site;
+	echo "</br> Toplam Resim Sayısı : ".count($resim);
+	echo "</br> Toplam Link Sayısı 	: ".count($link);
+	echo "</br> Toplam Resim Boyutu : ".donustur($toplam)." MB";
+	echo "</br>".$toplam;
+	echo "</div></div>";
+	
+*/
 
 
+
+	echo '<div class="panel panel-primary slc-sonuc">';
+    echo '<div class="panel-heading beyaz">';
+    echo '<h3 class="panel-title bold" id="panel-başlığı">'.$site;
+    echo '</h3>';
+    echo '</div>';
+    echo '<div class="panel-body">';
+    echo '<div class="alert alert-info" role="alert">';
+
+    echo "Toplam Resim Sayısı : ".count($resim);
+	echo "</br> Toplam Link Sayısı 	: ".count($link);
+	echo "</br> Toplam Resim Boyutu : ".donustur($toplam);
+
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
 
 
 }//else
 
+
 }///
 
+	echo "<div class='site'>";
+	//print_r($bulunan_site);
+	echo "</div>";
+/***************************************************************/
 ?>
 
-<style type="text/css">
-	.form{
-		position: absolute;
-		z-index: 999999999;
-		top: 0px;
-		right:0px;
-		background:#337ab7;
-		border-radius: 10px;
-		padding: 20px;
-		color: #fff;
-		text-align: center;
-		font-family: arial;
-		font-size: 20px;
-	}
-	.h3-site
-	{
-		position: absolute;
-		z-index: 999999999;
-		top: 0px;
-		left: calc(50% - 250px);
-		width: 500px;
-		height: auto;
-		background:#337ab7;
-		padding: 10px;
-		text-align: center;
-		border-radius: 10px;
-		color: #fff;
-		font-family: arial;
-		font-size: 20px;
+<!-- Html -->
+<meta charset="UTF-8"/>
 
+
+	<div class="panel panel-primary slc-form">
+		<div class="panel-heading">
+			<h3 class="panel-title" id="panel-başlığı">SLC Web Mühendisliği Site Analiz Aracı</h3>
+		</div>
+		<div class="panel-body">
+    		<div class="Form Grup">
+				<form>
+					</br>
+					<input class="form-control" type="text" name="ara" placeholder="Aramak İstediğiniz Siteyi Yazın" /></br>
+					<input class="btn btn-primary pull-right" type="submit" name="gonder" value="gonder" />
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+<!-- Css -->
+<style type="text/css">
+	
+	.slc-sonuc
+	{
+		width: 60%;
+		top: 20px;
+		left: 50px;
+		position: absolute;
+		z-index: 999999999;
+		text-align: center;
+	
+	}
+	.slc-form
+	{
+		width: 30%;
+		position: absolute;
+		z-index: 999999999;
+		top: 20px;
+		right: 50px;
+		text-align: center;
+	}
+	.panel-heading
+	{
+		padding: 15px!important;
+	}
+	.beyaz
+	{
+		color:#fff!important;
+		font-weight: bold;
+		text-align: center;
 	}
 
 </style>
-<!--
-//print_r(getimagesize("https://img-s1.onedio.com/id-57ee3c7e596dff604e4b1694/rev-0/w-460/h-290/f-jpg/s-2c4e0d1ecf3a140cf40c4db624e0db59e8562a4e.jpg"));
-/*
-$thefile = filesize('index.php'); 
 
-$dosya=file_get_contents("https://img-s1.onedio.com/id-575d0b418d8892fb48cd5c10/rev-0/w-190/h-110/f-jpg/s-a44968c4ea04c7277a1f448ba4da75929bf364e9.jpg");
-echo $dosya;
-*/
--->
+<!-- BootStrap -->
 
-<?php
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-function curl_img_size($file)
-{
-
-$ch = curl_init($file);
-   curl_setopt($ch, CURLOPT_NOBODY, true);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-   curl_setopt($ch, CURLOPT_HEADER, true);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-   $data = curl_exec($ch);
-   curl_close($ch);
-   $contentLength=0;
-   if (preg_match('/Content-Length: (\d+)/', $data, $matches))
-   {
-       $contentLength = (int)$matches[1];
-       /*
-  		 function format_size($size)
-		{
-     			 $sizes = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
-      			if ($size == 0) { return('n/a'); } else {
-      			return (round($size/pow(1024, ($i = floor(log($size, 1024)))), 2)); }
-		}
-		$contentLength=format_size($contentLength);
-		*/
-   }
-
-   return $contentLength;
-}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 
+                        
 
 
-
-?>
+                        

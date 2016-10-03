@@ -8,7 +8,7 @@
  **/
 
 /*** Fonksiyonlar ***/
-
+ini_set('max_execution_time', 250);
 
 function img_boyut($file)
 {
@@ -42,7 +42,7 @@ $ch = curl_init($file);
 
 function donustur($bytes)
     {
-        if ($bytes >= 1073741824)
+       /* if ($bytes >= 1073741824)
         {
             $bytes = number_format($bytes / 1073741824, 2) . ' GB';
         }
@@ -68,6 +68,10 @@ function donustur($bytes)
         }
 
         return $bytes;
+        */
+        $kb=$bytes/1024;
+       // $mb=$kb/1024;
+        return round($kb,2)."KB";
 }
 
 function ara($bas, $son, $icerik)
@@ -147,7 +151,7 @@ for ($i=0; $i <count($resim); $i++)
 
 //***** Yayınlama *******//
 
-
+ 	
 	echo '<div class="panel panel-primary slc-sonuc">';
     echo '<div class="panel-heading beyaz">';
     echo '<h3 class="panel-title bold" id="panel-başlığı">'.$site;
@@ -159,11 +163,12 @@ for ($i=0; $i <count($resim); $i++)
     echo "Toplam Resim Sayısı : ".count($resim);
 	echo "</br> Toplam Link Sayısı 	: ".count($link);
 	echo "</br> Toplam Resim Boyutu : ".donustur($toplam);
-
+	
     echo '</div>';
     echo '</div>';
     echo '</div>';
 
+   
 
 }//else
 
@@ -171,7 +176,7 @@ for ($i=0; $i <count($resim); $i++)
 }///
 
 	echo "<div class='site'>";
-	//print_r($bulunan_site);
+	print_r($bulunan_site);
 	echo "</div>";
 /***************************************************************/
 ?>

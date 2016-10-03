@@ -17,23 +17,15 @@ $ch = curl_init($file);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
    curl_setopt($ch, CURLOPT_HEADER, true);
    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-   $data = curl_exec($ch);
+   $veri = curl_exec($ch);
    curl_close($ch);
 
    $toplam_boyut=0;
    
-   if (preg_match('/Content-Length: (\d+)/', $data, $matches))
+   if (preg_match('/Content-Length: (\d+)/', $veri, $ddd))
    {
-       $toplam_boyut = (int)$matches[1];
-       /*
-  		 function format_size($size)
-		{
-     			 $sizes = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
-      			if ($size == 0) { return('n/a'); } else {
-      			return (round($size/pow(1024, ($i = floor(log($size, 1024)))), 2)); }
-		}
-		$contentLength=format_size($contentLength);
-		*/
+       $toplam_boyut = (int)$ddd[1];
+       
    }
    return $toplam_boyut;
 
@@ -42,33 +34,7 @@ $ch = curl_init($file);
 
 function donustur($bytes)
     {
-       /* if ($bytes >= 1073741824)
-        {
-            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
-        }
-        elseif ($bytes >= 1048576)
-        {
-            $bytes = number_format($bytes / 1048576, 2) . ' MB';
-        }
-        elseif ($bytes >= 1024)
-        {
-            $bytes = number_format($bytes / 1024, 2) . ' kB';
-        }
-        elseif ($bytes > 1)
-        {
-            $bytes = $bytes . ' bytes';
-        }
-        elseif ($bytes == 1)
-        {
-            $bytes = $bytes . ' byte';
-        }
-        else
-        {
-            $bytes = '0 bytes';
-        }
-
-        return $bytes;
-        */
+      
         $kb=$bytes/1024;
        // $mb=$kb/1024;
         return round($kb,2)."KB";

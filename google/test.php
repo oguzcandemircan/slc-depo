@@ -1,9 +1,41 @@
-<!--
-//print_r(getimagesize("https://img-s1.onedio.com/id-57ee3c7e596dff604e4b1694/rev-0/w-460/h-290/f-jpg/s-2c4e0d1ecf3a140cf40c4db624e0db59e8562a4e.jpg"));
-/*
-$thefile = filesize('index.php'); 
+<?php/*
+$query = 'Nikita%20Platonenko';
+$url = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=".$query;
 
-$dosya=file_get_contents("https://img-s1.onedio.com/id-575d0b418d8892fb48cd5c10/rev-0/w-190/h-110/f-jpg/s-a44968c4ea04c7277a1f448ba4da75929bf364e9.jpg");
-echo $dosya;
+$body = file_get_contents($url);
+$json = json_decode($body);
+
+for($x=0;$x<count($json->responseData->results);$x++){
+
+echo "<b>Result ".($x+1)."</b>";
+echo "<br>URL: ";
+echo $json->responseData->results[$x]->url;
+echo "<br>VisibleURL: ";
+echo $json->responseData->results[$x]->visibleUrl;
+echo "<br>Title: ";
+echo $json->responseData->results[$x]->title;
+echo "<br>Content: ";
+echo $json->responseData->results[$x]->content;
+echo "<br><br>";
+
+}
 */
--->
+
+
+
+
+
+
+?>
+<script>
+  (function() {
+    var cx = '012671333273470511509:qxra0cwyxw0';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>

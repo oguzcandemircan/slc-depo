@@ -7,12 +7,16 @@
  * @author Oguzcan Demircan
  **/
 
+echo "</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>";
+
 /*** Fonksiyonlar ***/
 ini_set('max_execution_time', 250);
 
 function img_boyut($file)
 {
 $ch = curl_init($file);
+$useragent = "Opera/9.80 (J2ME/MIDP; Opera Mini/4.2.14912/870; U; id) Presto/2.4.15";
+curl_setopt ($ch, CURLOPT_USERAGENT, $useragent);
    curl_setopt($ch, CURLOPT_NOBODY, true);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
    curl_setopt($ch, CURLOPT_HEADER, true);
@@ -68,7 +72,7 @@ curl_setopt ($ch, CURLOPT_URL, "http://www.google.com/search?hl=tr&tbo=d&site=&s
 curl_setopt ($ch, CURLOPT_USERAGENT, $useragent);
 curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-$cıktı = curl_exec ($ch);
+echo $cıktı = curl_exec ($ch);
 curl_close($ch);
 
 
@@ -79,7 +83,10 @@ $deneme=(explode('<a href="/url?q=',$sonuc[0]));
 
 $d2=explode('/', $deneme[1]);
 $site=$d2[2];
+$site;
 
+//echo "</br></br>Site adresi = ".
+	$site_www=substr($site,4,strlen($site));
 
 $bulunan_site=file_get_contents("http://".$site);
 
@@ -87,6 +94,8 @@ $bulunan_site=file_get_contents("http://".$site);
 
 $link = ara('<a href="','"',$bulunan_site);
 //print_r(count($link));
+
+//$resim=ara('<img src="','"',$bulunan_site);
 
 $resim=ara('<img src="','"',$bulunan_site);
 
@@ -96,25 +105,49 @@ $resim=ara('<img src="','"',$bulunan_site);
 
 $toplam=0;
 
-for ($i=0; $i <count($resim); $i++)
+	
+for ($i=5; $i <count($resim); $i++)
 { 	
-	$aa=$resim[$i];
-	if ($aa[0]=="/" && $aa[1]!=="/") 
+	 $aa=$resim[$i];
+	$resim[$i]=str_replace("https://","http://",$resim[$i]);
+	
+	 if ($aa[0]=="/" && $aa[1]!=="/") 
 	{
 		
 		$aaa=$site.$aa;
 		//echo $aaa."</br>";
 		$resim[$i]=$aaa;
 	}
+	else
+	{	
+		
+
+		$x=substr($resim[$i],0,strlen($site_www));
+		
+		
+ 		if ($x!=$site_www and substr($resim[$i],0,7)!="http://" and substr($resim[$i],0,1)!="//")
+		{	
+			//echo "</br></br> ==  site www :: ".
+			$resim[$i]=$site_www."/".$resim[$i];
+		
+		}
+	}
+		
 	
-	
-	$toplam=(int)img_boyut($resim[$i])+$toplam;
+	//echo  "</br> Resim  ===".$resim[$i]." ==</br>";
+	$toplam+=(int)img_boyut($resim[$i]);
 
 }//for
 
-//*************************************************************/
- 	
+	//echo "</br>".img_boyut("http://slc.com.tr/images/client/falmec.png");
 
+//*************************************************************/
+ 	/*
+  		img/asdasd.png
+  		https:/siteadi.com/img/assad.png;
+  		/img
+
+	*/
 //***** Yayınlama *******//
 
  	
@@ -135,22 +168,22 @@ for ($i=0; $i <count($resim); $i++)
     echo '</div>';
 
    
+	echo "<div class='site'>";
+	print_r($bulunan_site);
+	echo "</div>";
 
 }//else
 
 
 }///
-
-	echo "<div class='site'>";
-	print_r($bulunan_site);
-	echo "</div>";
 /***************************************************************/
 ?>
 
 <!-- Html -->
+	
+<head>
 <meta charset="UTF-8"/>
-
-
+</head>
 	<div class="panel panel-primary slc-form">
 		<div class="panel-heading">
 			<h3 class="panel-title" id="panel-başlığı">SLC Web Mühendisliği Site Analiz Aracı</h3>
@@ -182,7 +215,7 @@ for ($i=0; $i <count($resim); $i++)
 	}
 	.slc-form
 	{
-		width: 30%;
+		width: 30%!important;
 		position: absolute;
 		z-index: 999999999;
 		top: 20px;
@@ -205,8 +238,6 @@ for ($i=0; $i <count($resim); $i++)
 <!-- BootStrap -->
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 
                         

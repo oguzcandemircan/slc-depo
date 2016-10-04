@@ -72,7 +72,7 @@ curl_setopt ($ch, CURLOPT_URL, "http://www.google.com/search?hl=tr&tbo=d&site=&s
 curl_setopt ($ch, CURLOPT_USERAGENT, $useragent);
 curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-echo $cıktı = curl_exec ($ch);
+$cıktı = curl_exec ($ch);
 curl_close($ch);
 
 
@@ -97,10 +97,14 @@ $link = ara('<a href="','"',$bulunan_site);
 
 //$resim=ara('<img src="','"',$bulunan_site);
 
-$resim=ara('<img src="','"',$bulunan_site);
+$resim=ara('<img ','>',$bulunan_site);
 
 //print_r($resim);
 
+//$resim3=
+//$resim2 = ara('src="','"',$resim3);
+//echo "</br></br></br></br></br></br></br></br></br></br>=================";
+//print_r($resim2);
 //*************************************************************/
 
 $toplam=0;
@@ -142,12 +146,7 @@ for ($i=5; $i <count($resim); $i++)
 	//echo "</br>".img_boyut("http://slc.com.tr/images/client/falmec.png");
 
 //*************************************************************/
- 	/*
-  		img/asdasd.png
-  		https:/siteadi.com/img/assad.png;
-  		/img
-
-	*/
+ 
 //***** Yayınlama *******//
 
  	
@@ -169,7 +168,7 @@ for ($i=5; $i <count($resim); $i++)
 
    
 	echo "<div class='site'>";
-	print_r($bulunan_site);
+	//print_r($bulunan_site);
 	echo "</div>";
 
 }//else
